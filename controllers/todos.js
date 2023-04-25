@@ -1,4 +1,5 @@
 const Todo = require('../models/Todo')
+const Notes = require('../models/Notes')
 
 module.exports = {
     getTodos: async (req,res)=>{
@@ -6,7 +7,10 @@ module.exports = {
         try{
             const todoItems = await Todo.find({userId:req.user.id})
             const itemsLeft = await Todo.countDocuments({userId:req.user.id,completed: false})
-            res.render('todos.ejs', {todos: todoItems, left: itemsLeft, user: req.user})
+
+            const notes = await Notes.find({ userId: req.user.id });
+
+            res.render('todos.ejs', { todos: todoItems, left: itemsLeft, user: req.user, notes: notes });
         }catch(err){
             console.log(err)
         }
